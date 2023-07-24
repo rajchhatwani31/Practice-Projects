@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    
+}
+
+.primary-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-image: url('./img/bg.jpg');
+    background-size: cover;
+    font-family: 'GFS Didot', serif;
+    /* border: 1px solid black; */
+}
+
+.secondary-container {
+    background-color: #28282b80;
+}
+
+
+
+.primary-container > div > .btn{
+    position: absolute;
+    top:20px;
+    left: 30px ;
+}
