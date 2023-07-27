@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.use(cors());
 require('./Routes/routes')(app);
 
-mongoose.connect('mongodb://127.0.0.1:27017/Project1', {useNewUrlParser : true});
+mongoose.connect('mongodb+srv://raj:tz6sl6SWCS0J7juN@cluster0.5lpmiwh.mongodb.net/?retryWrites=true&w=majority', {useNewUrlParser : true});
 
 mongoose.connection
     .once("open", () => { 
@@ -19,3 +19,5 @@ mongoose.connection
     .on("error", (error) => {
         console.log('OOPs There is something wrong', error);
     });
+
+    // tz6sl6SWCS0J7juN
