@@ -1,12 +1,10 @@
 const initialState = {
   userList: [],
-  // defaultValue : []
+  defaultValue: {},
 };
 const getUser = (createUser = initialState, action) => {
-  console.log(action);
-  console.log(createUser);
   switch (action.type) {
-    case "CREATE_USER":
+    case "GENERATE_USER":
       return { ...createUser, userList: action.payload };
 
     case "DELETE_USER":
@@ -15,30 +13,13 @@ const getUser = (createUser = initialState, action) => {
         return e._id !== actionData;
       });
       return { ...createUser, userList: dataAfterDeletion };
+
+    case "EDIT_USER":
+      return { ...createUser, defaultValue: action.payload };
+
     default:
       return createUser;
   }
 };
-// const removeReducer = (createUser = initialState, action) => {
-//   console.log(action);
-//   console.log(createUser);
-//   switch (action.type) {
-//     case "DELETE_USER":
-
-//     default:
-//       return createUser;
-//   }
-// };
-//  const userOperation = (createUser = initialState, action) => {
-
-//     console.log(action);
-//     console.log(createUser);
-//     switch (action.type) {
-//         case 'CREATE_USER':
-//             return ({...createUser, userList: action.payload })
-//         default:
-//             return createUser
-//     }
-// }
 
 export { getUser };
