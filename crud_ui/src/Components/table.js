@@ -13,10 +13,9 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import axios from "axios";
 import InputData from "./form";
 import { useSelector, useDispatch } from "react-redux";
-import { create, remove, edit, get } from "./Actions/actions";
+import { addUser, remove, edit, get, updateUser } from "./Actions/actions";
 import { useEffect, useState } from "react";
 const style = {
   position: "absolute",
@@ -31,7 +30,6 @@ const style = {
 };
 
 export default function AccessibleTable() {
-    // debugger
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     Dispatch(edit(""));
@@ -42,37 +40,19 @@ export default function AccessibleTable() {
   const Dispatch = useDispatch();
   const got = async (values) => {
     if (values._id) {
-      const updating = await axios.put(`http://localhost:8080/update`, values);
-      let updateData = createUser.userList.map((data) => {
-        if (updating.data.data._id === data._id) {
-          return updating.data.data;
-        } else {
-          return data;
-        }
-      });
-      Dispatch(create(updateData));
+      Dispatch(updateUser(values));
       return;
     } else {
-      const response = await axios.post(
-        "http://localhost:8080/addUser",
-        values
-      );
-      createUser.userList.push(response.data.data);
-      Dispatch(create(createUser.userList));
+      Dispatch(addUser(values));
     }
   };
 
   useEffect(() => {
-      Dispatch(get());
+    Dispatch(get());
   }, [Dispatch]);
 
   const onDelete = async (perData) => {
-    const response = await axios.delete(
-      `http://localhost:8080/delete?id=${perData}`
-    );
-    if (response.status === 200) {
-      Dispatch(remove(perData));
-    }
+    Dispatch(remove(perData));
   };
 
   const onEdit = async (perData) => {
@@ -114,29 +94,30 @@ export default function AccessibleTable() {
               </TableRow>
             </TableHead>
             <TableBody className="secondary-container">
-              {createUser.userList.length >0 &&createUser.userList.map((e) => (
-                <TableRow>
-                  <TableCell component="th" scope="row">
-                    {e.name}
-                  </TableCell>
-                  <TableCell align="left">{e.contact}</TableCell>
-                  <TableCell align="left">{e.email}</TableCell>
-                  <TableCell>
-                    {" "}
-                    <IconButton onClick={() => onEdit(e)}>
+              {createUser.userList.length > 0 &&
+                createUser.userList.map((e) => (
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      {e.name}
+                    </TableCell>
+                    <TableCell align="left">{e.contact}</TableCell>
+                    <TableCell align="left">{e.email}</TableCell>
+                    <TableCell>
                       {" "}
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>
-                    {" "}
-                    <IconButton onClick={() => onDelete(e._id)}>
+                      <IconButton onClick={() => onEdit(e)}>
+                        {" "}
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
                       {" "}
-                      <DeleteIcon />{" "}
-                    </IconButton>{" "}
-                  </TableCell>
-                </TableRow>
-              ))}
+                      <IconButton onClick={() => onDelete(e._id)}>
+                        {" "}
+                        <DeleteIcon />{" "}
+                      </IconButton>{" "}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
