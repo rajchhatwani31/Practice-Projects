@@ -78,9 +78,7 @@ export default function AccessibleTable() {
         const response = await axios.delete(`http://localhost:8080/delete?id=${perData}`);
         console.log(response)
         if (response.status === 200) {
-            Dispatch(remove(createUser.userList.filter((e) => {
-                return e._id !== perData
-            })))
+            Dispatch(remove(perData));
         }
     }
 
