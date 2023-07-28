@@ -17,9 +17,7 @@ import Modal from '@mui/material/Modal';
 import axios from 'axios';
 import InputData from './form';
 import { useSelector, useDispatch } from 'react-redux';
-import { table } from './Actions/actions';
-// import {table} from "./Actions/actions"
-
+import { create, remove, edit } from './Actions/actions';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -39,25 +37,15 @@ export default function AccessibleTable() {
         setOpen(true);
     };
     const handleClose = () => setOpen(false);
-    const [form_data, setForm_data] = React.useState([]);
     const [defaultValue, setDefaultValue] = React.useState('');
-    // const [wait, setWait] = React.useState([]);
-    const createUser = useSelector((state) => state.userOperation);
+    const createUser = useSelector((state) => state.getUser);
     const Dispatch = useDispatch();
     console.log(createUser)
-    // async function metaData() {
-
-    // }
-    // metaData();
-    // console.log(wait)
-
-    // let response1 = createUser.userOperation.data
-    // setWait(response1)
 
     const got = async (values) => {
         if (values._id) {
             const updating = await axios.put(`http://localhost:8080/update`, values)
-            let updateData = form_data.map((data) => {
+            let updateData = createUser.userList.map((data) => {
                 if (updating.data.data._id === data._id) {
                     return updating.data.data;
                 }
@@ -65,13 +53,14 @@ export default function AccessibleTable() {
                     return data;
                 }
             })
-            setForm_data(updateData)
+            Dispatch(create(updateData));
             return
         }
         else {
             const response = await axios.post('http://localhost:8080/addUser', values);
             // console.log(response)
-            setForm_data([...form_data, response.data.data]);
+            createUser.userList.push(response.data.data)
+            Dispatch(create(createUser.userList));
         }
 
     }
@@ -79,20 +68,19 @@ export default function AccessibleTable() {
     React.useEffect(() => {
         async function callApi() {
             let response = await axios.get('http://localhost:8080/get');
-            setForm_data(response.data.data);
-            // Dispatch(table(), {  payload: response.data.data });
-            Dispatch(table(response.data.data));
+            Dispatch(create(response.data.data));
                 }
         callApi()
     }, [Dispatch])
 
     const onDelete = async (perData) => {
+
         const response = await axios.delete(`http://localhost:8080/delete?id=${perData}`);
+        console.log(response)
         if (response.status === 200) {
-            setForm_data(form_data.filter((e) => {
-                // console.log(response.status === 200);
+            Dispatch(remove(createUser.userList.filter((e) => {
                 return e._id !== perData
-            }))
+            })))
         }
     }
 
@@ -100,6 +88,7 @@ export default function AccessibleTable() {
 
         // console.log(perData._id);
         setDefaultValue(perData);
+        Dispatch(edit(perData));
         setOpen(true);
     }
 

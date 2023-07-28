@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import DataTable from "./Components/table";
 import { Provider } from "react-redux";
+import {createStore, applyMiddleware, compose} from 'redux'
 import rootReducer from "./Components/Reducers";
-import { createStore } from "redux";
 
-const store = createStore(rootReducer);
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware()))
+
 
 function App() {
   const [value, setValue] = useState("");
@@ -16,3 +18,5 @@ function App() {
 }
 
 export default App;
+
+
